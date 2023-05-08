@@ -1,0 +1,31 @@
+Funcoes que alteram o simplex
+
+Analisar os pontos
+
+f(x, y): return (x - 10) ** 2 + (y - 20) ** 2
+
+Cria_Simplex(f, n)
+
+Ordena_Simplex(S)
+
+(1, 0, 0)
+(0, 1, 0)
+(0, 0, 1)
+(0, 0, 0)
+
+
+S = [
+    (p0, f(p0)),
+    (p1, f(p1),),
+
+    ...
+    (pn, f(pn))
+]
+
+x = (x1 + x2 + x3) / 2
+y = (y1 + y2 + y3) / 3
+z = (z)
+
+
+A + AB*coef = A + (B - A) * coef = B*coef + A(1 - coef)
+A B
