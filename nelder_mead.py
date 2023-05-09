@@ -25,12 +25,13 @@ def extrair_dados(S):
 # Recebe um simplex ordenado e quantidade de dimensoes
 # Retorna o ponto centroide, excluindo o pior ponto
 def calcular_centroide(S, n):
-    return tuple(sum(p[0][i] for p in S) / n for i in range(n))
+    return tuple(sum(p[0][i] for p in S[:-1]) / n for i in range(n))
 
 # Recebe dois pontos e um coeficiente
 # Retorna um ponto deslocado A + AB*coef
-def calcular_ponto_deslocado(A, B, coef):
-    return tuple(b*coef + a*(1 - coef) for a,b in zip(A, B))
+def calcular_ponto_deslocado(A, B, coef, f):
+    p = tuple(b*coef + a*(1 - coef) for a,b in zip(A, B))
+    return p, f(p)
 
 # Recebe simplex, um ponto e o valor de p nesse ponto
 # Retorna o simplex ordenado, tendo seu pior ponto substituido
@@ -46,26 +47,70 @@ def contrair_simplex(S, n, coef, f):
     melhor = S[0][0]
     for i in range(1, n+1):
         ponto = S[i][0]
-        ponto_deslocado = calcular_ponto_deslocado(ponto, melhor, coef)
-        S_contraido.append((ponto_deslocado, f(ponto_deslocado)))
+        ponto_deslocado = calcular_ponto_deslocado(ponto, melhor, coef, f)
+        S_contraido.append(ponto_deslocado)
     return ordenar_simplex(S_contraido)
 
-def f(p):
-    x, y = p[0], p[1]
-    return (x - 10) ** 2 + (y - 20) ** 2
 
-Simplex = criar_simplex(f, 2)
-Simplex = ordenar_simplex(Simplex)
-pior, segundo_pior, melhor = extrair_dados(Simplex)
-print(Simplex)
-print("Pior", pior)
-print("Segundo pior", segundo_pior)
-print("Melhor", melhor)
-centroide = calcular_centroide(Simplex, 2)
-print("Centroide", centroide)
-refletido = calcular_ponto_deslocado(pior[0], centroide, 2)
-print("Refletido", refletido)
-f_refletido = f(refletido)
-Simplex = substituir_pior_ponto(Simplex, refletido, f_refletido)
-print(Simplex)
+# Recebe uma funcao e sua quantidade de dimensoes e a quantidade de iteracoes
+# Retorna o ponto de minimo da funcao
+def nelder_mead(f, n, avals):
+    Simplex = criar_simplex(f, n)
+    Simplex = ordenar_simplex(Simplex)
+    # (p, f(p))
+    pior, segundo_pior, melhor = extrair_dados(Simplex)
+
+    while avals > 0:
+        # print(Simplex)
+        avals -= 1
+        centroide = calcular_centroide(Simplex, n)
+        # print("Centroide", centroide)
+        refletido = calcular_ponto_deslocado(pior[0], centroide, 2, f)
+        # print("Refletido", refletido)
+        if segundo_pior[1] > refletido[1] >= melhor[1]:
+            Simplex = substituir_pior_ponto(Simplex, refletido[0], refletido[1])
+            pior, segundo_pior, melhor = extrair_dados(Simplex)
+            continue
+        if melhor[1] > refletido[1]:
+            expandido = calcular_ponto_deslocado(pior[0], centroide, 4, f)
+            if refletido[1] > expandido[1]:
+                Simplex = substituir_pior_ponto(Simplex, expandido[0], expandido[1])
+            else:
+                Simplex = substituir_pior_ponto(Simplex, refletido[0], refletido[1])
+            pior, segundo_pior, melhor = extrair_dados(Simplex)
+            continue
+        if pior[1] >= refletido[1]:
+            contraido_externo = calcular_ponto_deslocado(pior[0], centroide, 3/2, f)
+            if refletido[1] > contraido_externo[1]:
+                Simplex = substituir_pior_ponto(Simplex, contraido_externo[0], contraido_externo[1])
+                pior, segundo_pior, melhor = extrair_dados(Simplex)
+                continue
+        else:
+            contraido_interno = calcular_ponto_deslocado(pior[0], centroide, 1/2, f)
+            if pior[1] > contraido_interno[1]:
+                Simplex = substituir_pior_ponto(Simplex, contraido_interno[0], contraido_interno[1])
+                pior, segundo_pior, melhor = extrair_dados(Simplex)
+                continue
+
+        Simplex = contrair_simplex(Simplex, n, 1/2, f)
+        pior, segundo_pior, melhor = extrair_dados(Simplex)
+
+    return melhor
+
+
+
+# Simplex = criar_simplex(f, 2)
+# Simplex = ordenar_simplex(Simplex)
+# pior, segundo_pior, melhor = extrair_dados(Simplex)
+# print(Simplex)
+# print("Pior", pior)
+# print("Segundo pior", segundo_pior)
+# print("Melhor", melhor)
+# centroide = calcular_centroide(Simplex, 2)
+# print("Centroide", centroide)
+# refletido = calcular_ponto_deslocado(pior[0], centroide, 2)
+# print("Refletido", refletido)
+# f_refletido = f(refletido)
+# Simplex = substituir_pior_ponto(Simplex, refletido, f_refletido)
+# print(Simplex)
 
