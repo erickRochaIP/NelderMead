@@ -52,21 +52,18 @@ def contrair_simplex(S, n, coef, f):
     return ordenar_simplex(S_contraido)
 
 
-# Recebe uma funcao e sua quantidade de dimensoes e a quantidade de iteracoes
+# Recebe uma funcao, quantidade de dimensoes, quantidade de iteracoes e os parametros
 # Retorna o ponto de minimo da funcao
-def nelder_mead(f, n, avals):
+def nelder_mead(f, n, avals, params):
+	# TODO: Receber ponto inicial e params
     Simplex = criar_simplex(f, n)
     Simplex = ordenar_simplex(Simplex)
-    # (p, f(p))
     pior, segundo_pior, melhor = extrair_dados(Simplex)
 
     while avals > 0:
-        # print(Simplex)
         avals -= 1
         centroide = calcular_centroide(Simplex, n)
-        # print("Centroide", centroide)
         refletido = calcular_ponto_deslocado(pior[0], centroide, 2, f)
-        # print("Refletido", refletido)
         if segundo_pior[1] > refletido[1] >= melhor[1]:
             Simplex = substituir_pior_ponto(Simplex, refletido[0], refletido[1])
             pior, segundo_pior, melhor = extrair_dados(Simplex)
@@ -96,21 +93,3 @@ def nelder_mead(f, n, avals):
         pior, segundo_pior, melhor = extrair_dados(Simplex)
 
     return melhor
-
-
-
-# Simplex = criar_simplex(f, 2)
-# Simplex = ordenar_simplex(Simplex)
-# pior, segundo_pior, melhor = extrair_dados(Simplex)
-# print(Simplex)
-# print("Pior", pior)
-# print("Segundo pior", segundo_pior)
-# print("Melhor", melhor)
-# centroide = calcular_centroide(Simplex, 2)
-# print("Centroide", centroide)
-# refletido = calcular_ponto_deslocado(pior[0], centroide, 2)
-# print("Refletido", refletido)
-# f_refletido = f(refletido)
-# Simplex = substituir_pior_ponto(Simplex, refletido, f_refletido)
-# print(Simplex)
-
