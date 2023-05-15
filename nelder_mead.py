@@ -1,16 +1,16 @@
-# Recebe o eixo e a quantidade de dimensoes
-def criar_ponto(i, n):
-    return tuple(0 if j != i else 1 for j in range(n))
+# Recebe o eixo e o ponto inicial
+def criar_ponto(i, x0):
+    return tuple(x0[j] if j != i else x0[j]+ 1 for j in range(len(x0)))
 
-# Recebe a quantidade de dimensoes
+# Recebe o ponto inicial
 # Retorna as bases e a origem
-def criar_pontos(n):
-    return [criar_ponto(i, n) for i in range(n+1)]
+def criar_pontos(x0):
+    return [criar_ponto(i, x0) for i in range(len(x0)+1)]
 
-# Recebe uma funcao e a quantidade de dimensoes do dominio
+# Recebe uma funcao e o ponto inicial
 # Retorna um simplex nao ordenado, no qual os pontos sao as bases e a origem
-def criar_simplex(f, n):
-    return [(p, f(p)) for p in criar_pontos(n)]
+def criar_simplex(f, x0):
+    return [(p, f(p)) for p in criar_pontos(x0)]
 
 # Recebe um simplex
 # Retorna o simplex ordenado por f(p)
@@ -54,9 +54,10 @@ def contrair_simplex(S, n, coef, f):
 
 # Recebe uma funcao, quantidade de dimensoes, quantidade de iteracoes e os parametros
 # Retorna o ponto de minimo da funcao
-def nelder_mead(f, n, avals, params):
+def nelder_mead(f, x0, avals, params = None):
 	# TODO: Receber ponto inicial e params
-    Simplex = criar_simplex(f, n)
+    n = len(x0)
+    Simplex = criar_simplex(f, x0)
     Simplex = ordenar_simplex(Simplex)
     pior, segundo_pior, melhor = extrair_dados(Simplex)
 
