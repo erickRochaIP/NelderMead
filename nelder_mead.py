@@ -52,15 +52,16 @@ def contrair_simplex(S, n, coef, f):
     return ordenar_simplex(S_contraido)
 
 
-# Recebe uma funcao, quantidade de dimensoes, quantidade de iteracoes e os parametros
+# Recebe uma funcao, ponto inicial, quantidade de iteracoes e os parametros
 # Retorna o ponto de minimo da funcao
 def nelder_mead(f, x0, avals, params = None):
-	# TODO: Receber ponto inicial e params
+    if params is None:
+        params = {}
     n = len(x0)
-    coef_reflexao = 2
-    coef_exp = 4
-    coef_contracao = 1/2
-    coef_encolhimento = 1/2
+    coef_reflexao = params["ir"] if "ir" in params else 2
+    coef_exp = params["ie"] if "ie" in params else 4
+    coef_contracao = params["ic"] if "ic" in params else 1/2
+    coef_encolhimento = params["is"] if "is" in params else 1/2
     Simplex = criar_simplex(f, x0)
     Simplex = ordenar_simplex(Simplex)
     pior, segundo_pior, melhor = extrair_dados(Simplex)

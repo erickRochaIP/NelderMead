@@ -8,7 +8,8 @@ def f1(p):
     x = p[0]
     return x ** 2 + x * 3 + 10
 
-p, f_p = nelder_mead(f2, [0, -10], 500)
+# p, f_p = nelder_mead(f2, (0, -10), 500, params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2})
+p, f_p = nelder_mead(f2, (0, -10), 500)
 
 print("Ponto de minimo", p)
 print("Valor minimo", f_p)
