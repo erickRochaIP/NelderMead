@@ -2,6 +2,8 @@
 
 
 # Zakharov Function
+def zakharov_function(x):
+    pass
 
 # Rosenbrock's Function
 

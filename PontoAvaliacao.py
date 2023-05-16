@@ -1,9 +1,11 @@
+import math
+
 class PontoAvaliacao:
 
     def __init__(self, x, f, lu):
         self.x = x
         self.inviabilidade = PontoAvaliacao.obter_inviabilidade_ponto(x, lu)
-        self.f_x = f(x) if self.inviabilidade == 0 else None
+        self.f_x = f(x) if self.inviabilidade == 0 else math.inf
 
     def obter_inviabilidade_ponto(x, lu):
         return sum(PontoAvaliacao.obter_inviabilidade_var(xi, lui) for xi, lui in zip(x, lu))
@@ -11,6 +13,14 @@ class PontoAvaliacao:
     def obter_inviabilidade_var(xi, lui):
         li, ui = lui[0], lui[1]
         return max(0, li - xi) + max(0, xi - ui)
+
+    # Recebe dois pontos e um coeficiente
+    # Retorna um ponto deslocado A + AB*coef
+    def calcular_ponto_deslocado(A, B, coef):
+        return tuple(b*coef + a*(1 - coef) for a,b in zip(A, B))
+    
+    def print_ponto(self):
+        print("x", self.x, "f(x)", self.f_x, "inviabilidade", self.inviabilidade)
     
     def __lt__(self, other):
         if self.inviabilidade != other.inviabilidade:

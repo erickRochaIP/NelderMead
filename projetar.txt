@@ -1,8 +1,8 @@
 V1
-    - Receber ponto inicial do simplex
-    - Implementar params com coeficientes
+    - Receber ponto inicial do simplex [x]
+    - Implementar params com coeficientes [x]
 
 V2
-    - Implementar funcoes de benchmark
-    - Implementar restricao de caixa
-    - Implementar operador de comparacao
+    - Implementar funcoes de benchmark [ ]
+    - Implementar restricao de caixa [x]
+    - Implementar operador de comparacao [x]
