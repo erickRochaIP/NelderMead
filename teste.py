@@ -10,19 +10,21 @@ def f1(p):
     x = p[0]
     return x ** 2 + x * 3 + 10
 
-# p, f_p = nelder_mead(f2, (0, -10), 500, params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2})
-pa = nelder_mead(f2, (50, 50), 500,
-                 [(-10, 10), (-10, 10)],
-                 params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2})
+functions = [bf.zakharov_function,
+             bf.rosenbrock_function,
+             bf.expanded_schaffer_function,
+             bf.rastrigin_function,
+             bf.levy_function]
 
+def test_function(f, x0, lu):
+    p_nm = nelder_mead(f, x0, 500,
+                 lu,
+                 params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2}).x
+    p_sp = optimize.minimize(f, x0,
+                       bounds=lu).x
+    print("Nelder Mead Nosso", p_nm)
+    print("Nelder Mead Scipy", p_sp)
+    print("==============")
 
-# pa = nelder_mead(bf.zakharov_function, (50, 50), 500,
-#                  [(-1, 1), (-1, 1)],
-#                  params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2})
-
-sp = optimize.minimize(f2, (50, 50),
-                       bounds=[(-10, 10), (-10, 10)])
-
-print("Ponto de minimo", pa.x)
-print("Valor minimo", pa.f_x)
-print("scipy", sp)
+for function in functions:
+    test_function(function, (10, 10), [(-100, 100), (-100, 100)])

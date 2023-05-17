@@ -3,6 +3,6 @@ V1
     - Implementar params com coeficientes [x]
 
 V2
-    - Implementar funcoes de benchmark [ ]
+    - Implementar funcoes de benchmark [x]
     - Implementar restricao de caixa [x]
     - Implementar operador de comparacao [x]
