@@ -2,29 +2,39 @@ from nelder_mead import nelder_mead
 from scipy import optimize
 import benchmark_functions as bf
 
-def f2(p):
-    x, y = p[0], p[1]
-    return (x) ** 2 + (y + 20) ** 2
-
-def f1(p):
-    x = p[0]
-    return x ** 2 + x * 3 + 10
-
-functions = [bf.zakharov_function,
-             bf.rosenbrock_function,
-             bf.expanded_schaffer_function,
-             bf.rastrigin_function,
-             bf.levy_function]
+def string_point(x):
+    s = "("
+    for xi in x[:-1]:
+        s += f"{xi:.3f}, "
+    s += f"{x[-1]:.3f})"
+    return s
 
 def test_function(f, x0, lu):
+    if f.__name__ is not None:
+        print(f.__name__)
+        print()
+    
     p_nm = nelder_mead(f, x0, 500,
                  lu,
-                 params = {"ie": 4, "ic": 1/2, "ir": 2, "is": 1/2}).x
+                 params = {"ie": 2, "ic": 1/2, "ir": 2, "is": 1/2}).x
     p_sp = optimize.minimize(f, x0,
                        bounds=lu).x
-    print("Nelder Mead Nosso", p_nm)
-    print("Nelder Mead Scipy", p_sp)
+    print(f"Nelder Mead Nosso: x*={string_point(p_nm)}; f(x*)={f(p_nm):.3f}")
+    print(f"Nelder Mead Scipy: x*={string_point(p_sp)}; f(x*)={f(p_sp):.3f}")
     print("==============")
 
+
+functions = [
+    bf.zakharov_function,
+    bf.rosenbrock_function,
+    bf.expanded_schaffer_function,
+    bf.rastrigin_function,
+    bf.levy_function
+    ]
+
+x0 = [10]
+lu = [(-10, 10)]
+
 for function in functions:
-    test_function(function, (10, 10), [(-100, 100), (-100, 100)])
+    test_function(function, x0 * 2, lu * 2)
+    test_function(function, x0 * 10, lu * 10)
