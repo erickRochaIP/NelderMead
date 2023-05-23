@@ -1,11 +1,20 @@
 import math
 
 class PontoAvaliacao:
+    
+    avals = 0
 
     def __init__(self, x, f, lu):
         self.x = x
         self.inviabilidade = PontoAvaliacao.obter_inviabilidade_ponto(x, lu)
-        self.f_x = f(x) if self.inviabilidade == 0 else math.inf
+        self.f_x = PontoAvaliacao.avaliar_funcao(f, x) if self.inviabilidade == 0 else math.inf
+      
+    def reset_avals():
+        PontoAvaliacao.avals = 0
+    
+    def avaliar_funcao(f, x):
+        PontoAvaliacao.avals += 1
+        return f(x)
 
     def obter_inviabilidade_ponto(x, lu):
         return sum(PontoAvaliacao.obter_inviabilidade_var(xi, lui) for xi, lui in zip(x, lu))

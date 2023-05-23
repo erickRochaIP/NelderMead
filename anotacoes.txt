@@ -1,0 +1,1 @@
+- Determinadas funcoes tem determinados metodos (como encontrar?)

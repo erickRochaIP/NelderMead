@@ -3,12 +3,12 @@ import numpy as np
 from simplex import Simplex, PontoAvaliacao
 
 def prints(str):
-    if False:
+    if True:
         print(str)
 
 # Recebe uma funcao, ponto inicial, quantidade de iteracoes, limites, parametros e tolerancia
 # Retorna o ponto cujo valor da funcao e o menor encontrado
-def nelder_mead(f, x0, avals, lu, params = None, eps_x = 0.0):
+def nelder_mead(f, x0, avals_usr, lu, params = None, eps_x = 0.0):
     if params is None:
         params = {}
     coef_reflexao = params["ir"] if "ir" in params else 2
@@ -24,8 +24,9 @@ def nelder_mead(f, x0, avals, lu, params = None, eps_x = 0.0):
     melhor_dos_melhores = melhor
     atual_melhor = melhor
 
-    while avals > 0:
-        
+    PontoAvaliacao.reset_avals()
+    while avals_usr > PontoAvaliacao.avals:
+        print(PontoAvaliacao.avals)
         if S.estagnou(eps_x):
             prints("estagnou")
             if atual_melhor == melhor:
@@ -38,7 +39,6 @@ def nelder_mead(f, x0, avals, lu, params = None, eps_x = 0.0):
             pior, segundo_pior, melhor = S.extrair_dados()
             continue
 
-        avals -= 1
         centroide = S.calcular_centroide()
         refletido = PontoAvaliacao.calcular_ponto_deslocado(pior.x, centroide, coef_reflexao)
         refletido = PontoAvaliacao(refletido, f, lu)
