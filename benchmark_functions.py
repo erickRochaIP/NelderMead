@@ -6,7 +6,7 @@ def zakharov_function(x):
 	somatorio05 = 0
 	somatoriox2 = 0
 	for i in range(D):
-		somatorio05 += 0.5 * x[i] # correto?
+		somatorio05 += 0.5 * x[i]
 		somatoriox2 += x[i] ** 2
 	return somatoriox2 + somatorio05 ** 2 + somatorio05 ** 4
 
